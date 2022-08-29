@@ -1,13 +1,23 @@
 <script setup>
-const props = defineProps(['title'])
+const props = defineProps({
+  title: String,
+  date: String
+})
+
+const emits = defineEmits({
+  register(payload) {
+    console.log('register', payload)
+  }
+})
 </script>
 
 <template>
   <div class="card bg-neutral text-neutral-content">
     <div class="card-body items-center text-center">
       <h2 class="card-title">{{ title }}</h2>
+      <p>{{ date }}</p>
       <div class="card-actions justify-center">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" @click="$emit('register')">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-6 w-6"
@@ -30,5 +40,4 @@ const props = defineProps(['title'])
 </template>
 
 <style scoped>
-
 </style>

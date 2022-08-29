@@ -1,55 +1,58 @@
 <script setup>
+import { ref } from "vue"
+import Card from "@/components/Card.vue"
+
+const courses = ref([
+  {
+    id: 1,
+    date: '10/16',
+    title: 'iBible1',
+    owner: '',
+  },
+  {
+    id: 2,
+    date: '10/23',
+    title: 'iBible2',
+    owner: '',
+  },
+  {
+    id: 1,
+    date: '10/30',
+    title: '慶生會',
+    owner: '',
+  }
+])
+const openModal = ref(false)
+const selectedCourse = ref({})
+
+const onRegister = (selCourse) => {
+  openModal.value = true
+  selectedCourse.value = selCourse
+}
+const onCloseModal = () => {
+  console.log('onCloseModal', selectedCourse.value)
+  openModal.value = false
+}
+
+
 </script>
 
 <template>
-  <div class="flex">
-    <div class="m-4 card bg-neutral text-neutral-content">
-      <div class="card-body items-center text-center">
-        <h2 class="card-title">10/2</h2>
-        <div class="card-actions justify-center">
-          <button class="btn btn-primary">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            Accept
-          </button>
-        </div>
-      </div>
-    </div>
+  <h1 class="my-4 text-center text-2xl">2022 學青選課囉~</h1>
+  <div class="flex flex-wrap justify-center">
+    <template v-for="course in courses" :key="course.id">
+      <Card class="m-2" :title="course.title" :date="course.date" @register="onRegister(course)"></Card>
+      <!-- <label for="my-modal" class="btn modal-button">open modal</label> -->
+    </template>
+  </div>
 
-    <div class="m-4 card bg-neutral text-neutral-content">
-      <div class="card-body items-center text-center">
-        <h2 class="card-title">10/9</h2>
-        <div class="card-actions justify-center">
-          <button class="btn btn-primary">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            Accept
-          </button>
-        </div>
+  <!-- Modal -->
+  <input type="checkbox" class="modal-toggle" v-model="openModal" />
+  <div class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">Accept this challenge?</h3>
+      <div class="modal-action">
+        <label class="btn" @click="onCloseModal">Yay!</label>
       </div>
     </div>
   </div>
