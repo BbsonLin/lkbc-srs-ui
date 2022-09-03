@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, reactive } from "vue"
-import { db } from "@/firebase"
 import { set, onValue, ref as fireRef } from "firebase/database"
+import { db } from "@/firebase"
 import CourseCard from "@/components/CourseCard.vue"
 
 const courses = ref([])
@@ -36,8 +36,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1 class="my-4 text-center text-2xl">2022</h1>
-  <button class="btn btn-secondary" @click="onAddCourse">新增</button>
+  <!-- <h1 class="my-4 text-center text-2xl">2022</h1> -->
+  <button class="btn btn-secondary" @click="openModal = true">新增</button>
   <template v-for="course in courses" :key="course.id">
     <CourseCard class="m-2" :title="course.title" :date="course.date" @edit="onEdit(course)"></CourseCard>
   </template>
@@ -45,7 +45,8 @@ onMounted(async () => {
   <!-- Modal -->
   <input type="checkbox" class="modal-toggle" v-model="openModal" />
   <div class="modal">
-    <div class="modal-box">
+    <div class="modal-box relative">
+      <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2" @click="openModal = false">✕</label>
       <h1 class="text-2xl">新增課程</h1>
       <div class="my-2">
         <label class="label">

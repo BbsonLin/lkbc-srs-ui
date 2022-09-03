@@ -26,10 +26,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1 class="my-4 text-center text-2xl">2022 學青選課囉~</h1>
+  <!-- <h1 class="my-4 text-center text-2xl">2022 學青選課囉~</h1> -->
   <div class="flex flex-wrap justify-center">
     <template v-for="course in courses" :key="course.id">
-      <Card class="m-2" :title="course.title" :date="course.date" @register="onRegister(course)"></Card>
+      <Card class="m-1" :title="course.title" :date="course.date" @register="onRegister(course)"></Card>
       <!-- <label for="my-modal" class="btn modal-button">open modal</label> -->
     </template>
   </div>
@@ -40,6 +40,7 @@ onMounted(async () => {
     <div class="modal-box">
       <h3 class="font-bold text-lg">Accept this challenge?</h3>
       <div class="modal-action">
+        <label class="btn" @click="onCloseModal">Nope</label>
         <label class="btn" @click="onCloseModal">Yay!</label>
       </div>
     </div>
