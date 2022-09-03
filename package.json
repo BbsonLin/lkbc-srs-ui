@@ -9,8 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@firebase/app": "^0.7.32",
+    "@vueuse/core": "^9.1.1",
     "daisyui": "^2.24.0",
-    "vue": "^3.2.37"
+    "firebase": "^9.9.4",
+    "vue": "^3.2.37",
+    "vue-router": "^4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.3",
