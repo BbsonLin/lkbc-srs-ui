@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue"
 import { useRoute, useRouter } from 'vue-router'
 import { useColorMode, usePreferredColorScheme } from '@vueuse/core'
+import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth'
 
 const mode = useColorMode({
   attribute: 'data-theme',
@@ -11,10 +12,13 @@ const mode = useColorMode({
     dark: 'dark',
   },
 })
-
 const route = useRoute()
 const router = useRouter()
+const provider = new GoogleAuthProvider()
+
 const theme = ref('dark')
+const openLoginModal = ref(false)
+const photoUrl = ref('')
 
 const onChangeTheme = (el) => {
   if (theme.value == 'dark') {
@@ -27,6 +31,29 @@ const onChangeTheme = (el) => {
 }
 const onGoHome = () => {
   router.push('/')
+}
+const onLoginWithGoogle = () => {
+  signInWithPopup(getAuth(), provider).then((result) => {
+    // This gives you a Google Access Token. You can use it to access Google APIs.
+    console.log(result)
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+
+    // The signed-in user info.
+    const user = result.user;
+    console.log(token, user)
+    photoUrl.value = user.photoURL
+    openLoginModal.value = false
+  }).catch((error) => {
+    console.log(error)
+    // Handle Errors here.
+    // const errorCode = error.code;
+    // const errorMessage = error.message;
+    // The email of the user's account used.
+    // const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+  });
 }
 
 onMounted(() => {
@@ -45,11 +72,7 @@ onMounted(() => {
             d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
         </svg>
       </a>
-    </div>
-    <div class="navbar-center">
-      <h1 class="text-2xl text-center">{{ route.meta.title }}</h1>
-    </div>
-    <div class="navbar-end">
+      <!-- Theme button -->
       <label class="btn btn-ghost swap swap-rotate">
         <input type="checkbox" @change="onChangeTheme" />
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -64,8 +87,66 @@ onMounted(() => {
         </svg>
       </label>
     </div>
+    <div class="navbar-center">
+      <h1 class="text-2xl text-center">{{ route.meta.title }}</h1>
+    </div>
+    <div class="navbar-end">
+      <!--  -->
+      <button class="btn btn-ghost" @click="openLoginModal = true" v-if="photoUrl == ''">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+        </svg>
+      </button>
+      <!--  -->
+      <div class="dropdown dropdown-end" v-else>
+        <label tabindex="0" class="btn btn-md btn-circle btn-ghost m-1">
+          <div class="avatar">
+            <div class="w-8 rounded-full">
+              <img :src="photoUrl" />
+            </div>
+          </div>
+        </label>
+        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-24">
+          <li><a>Logout</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
   <router-view></router-view>
+
+  <!-- Login Modal -->
+  <input type="checkbox" class="modal-toggle" v-model="openLoginModal" />
+  <div class="modal">
+    <div class="modal-box relative flex flex-col items-center">
+      <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2"
+        @click="openLoginModal = false">✕</label>
+      <h1 class="text-lg">登入</h1>
+
+      <!-- <div class="my-2">
+        <label class="label">
+          <span class="label-text">活動名稱</span>
+        </label>
+        <input type="text" placeholder="iBible3" class="input input-bordered w-full max-w-xs"
+          v-model="courseForm.title" />
+      </div> -->
+
+      <button class="btn btn-wide" @click="onLoginWithGoogle">
+        <svg aria-hidden="true" class="native svg-icon iconGoogle" width="18" height="18" viewBox="0 0 18 18">
+          <path
+            d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18Z"
+            fill="#4285F4"></path>
+          <path d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17Z"
+            fill="#34A853"></path>
+          <path d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07Z" fill="#FBBC05"></path>
+          <path d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3Z"
+            fill="#EA4335"></path>
+        </svg>
+        <p class="ml-1">Login with Google</p>
+      </button>
+    </div>
+  </div>
 </template>
 
 <style>
