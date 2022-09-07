@@ -1,7 +1,8 @@
 <script setup>
 const props = defineProps({
   title: String,
-  date: String
+  date: String,
+  owner: String | Object,
 })
 
 const emits = defineEmits({
@@ -16,6 +17,7 @@ const emits = defineEmits({
     <div class="card-body items-center text-center">
       <h2 class="card-title">{{ title }}</h2>
       <p>{{ date }}</p>
+      <p v-if="owner != ''">{{ owner.name }}</p>
       <div class="card-actions justify-center">
         <button class="btn btn-primary" @click="$emit('register')">
           <svg

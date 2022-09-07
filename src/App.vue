@@ -2,7 +2,8 @@
 import { onMounted, ref } from "vue"
 import { useRoute, useRouter } from 'vue-router'
 import { useColorMode, usePreferredColorScheme } from '@vueuse/core'
-import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth'
+import { GoogleAuthProvider, signInWithPopup, getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
+import { auth } from "@/firebase"
 
 const mode = useColorMode({
   attribute: 'data-theme',
@@ -36,11 +37,11 @@ const onLoginWithGoogle = () => {
   signInWithPopup(getAuth(), provider).then((result) => {
     // This gives you a Google Access Token. You can use it to access Google APIs.
     console.log(result)
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
+    const credential = GoogleAuthProvider.credentialFromResult(result)
+    const token = credential.accessToken
 
     // The signed-in user info.
-    const user = result.user;
+    const user = result.user
     console.log(token, user)
     photoUrl.value = user.photoURL
     openLoginModal.value = false
@@ -52,11 +53,21 @@ const onLoginWithGoogle = () => {
     // The email of the user's account used.
     // const email = error.customData.email;
     // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
+    const credential = GoogleAuthProvider.credentialFromError(error)
   });
+}
+const onLogout = () => {
+  signOut(getAuth())
+  router.go('/')
 }
 
 onMounted(() => {
+  onAuthStateChanged(getAuth(), (user) => {
+    // console.log(user)
+    if (user) {
+      photoUrl.value = user.photoURL
+    }
+  })
   const preferredColor = usePreferredColorScheme()
   mode.value = preferredColor.value
 })
@@ -109,7 +120,7 @@ onMounted(() => {
           </div>
         </label>
         <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-24">
-          <li><a>Logout</a></li>
+          <li><a @click="onLogout">Logout</a></li>
         </ul>
       </div>
     </div>
@@ -123,15 +134,6 @@ onMounted(() => {
       <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2"
         @click="openLoginModal = false">✕</label>
       <h1 class="text-lg">登入</h1>
-
-      <!-- <div class="my-2">
-        <label class="label">
-          <span class="label-text">活動名稱</span>
-        </label>
-        <input type="text" placeholder="iBible3" class="input input-bordered w-full max-w-xs"
-          v-model="courseForm.title" />
-      </div> -->
-
       <button class="btn btn-wide" @click="onLoginWithGoogle">
         <svg aria-hidden="true" class="native svg-icon iconGoogle" width="18" height="18" viewBox="0 0 18 18">
           <path
