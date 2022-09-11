@@ -4,21 +4,21 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
-      path: "/",
+      path: '/',
       name: 'Home',
-      component: () => import("@/views/Home.vue"),
+      component: () => import('@/views/Home.vue'),
       meta: {
-        title: '學青選課囉~'
-      }
+        title: '學青選課囉~',
+      },
     },
     {
-      path: "/admin",
+      path: '/admin',
       name: 'Admin',
-      component: () => import("@/views/Admin.vue"),
+      component: () => import('@/views/Admin.vue'),
       meta: {
-        title: 'Admin'
-      }
-    }
+        title: 'Admin',
+      },
+    },
   ],
 })
 

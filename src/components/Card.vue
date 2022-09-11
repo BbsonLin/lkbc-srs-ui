@@ -8,7 +8,7 @@ const props = defineProps({
 const emits = defineEmits({
   register(payload) {
     console.log('register', payload)
-  }
+  },
 })
 </script>
 
@@ -41,5 +41,4 @@ const emits = defineEmits({
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
