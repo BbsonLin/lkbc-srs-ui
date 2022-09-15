@@ -2,38 +2,66 @@
 const props = defineProps({
   title: String,
   date: String,
+  owner: String | Object,
+  disable: {
+    type: Boolean,
+    default: false,
+  },
+  cancelable,
 })
 
 const emits = defineEmits({
-  edit(payload) {
-    console.log('edit', payload)
+  register(payload) {
+    console.log('register', payload)
   },
 })
 </script>
 
 <template>
-  <div class="card card-bordered card-compact bg-base-100 shadow-xl">
-    <div class="card-body flex-row justify-around">
-      <div class="flex items-center">
-        <h2 class="card-title mr-2">{{ title }}</h2>
-        <p>{{ date }}</p>
-      </div>
-      <div class="card-actions justify-center">
-        <button class="btn btn-primary p-3" @click="$emit('edit')">
+  <div class="card card-bordered border-2 bg-base-100 shadow-xl">
+    <div class="card-body items-center text-center">
+      <h2 class="card-title">{{ title }}</h2>
+      <p>{{ date }}</p>
+      <div class="flex">
+        <p v-if="owner != ''">{{ owner.name }}</p>
+        <button class="btn btn-circle btn-outline" @click="$emit('register')">
           <svg
             xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
             stroke="currentColor"
-            class="w-6 h-6"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
             />
           </svg>
+        </button>
+      </div>
+      <div class="card-actions justify-center">
+        <button
+          class="btn btn-primary"
+          :class="{ 'btn-disabled': disable }"
+          @click="$emit('register')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          Accept
         </button>
       </div>
     </div>

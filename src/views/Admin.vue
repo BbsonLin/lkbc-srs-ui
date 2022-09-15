@@ -2,7 +2,7 @@
 import { ref, onMounted, reactive } from 'vue'
 import { set, onValue, ref as fireRef } from 'firebase/database'
 import { db } from '@/firebase'
-import CourseCard from '@/components/CourseCard.vue'
+import FlatCourseCard from '@/components/FlatCourseCard.vue'
 
 const courses = ref([])
 const openModal = ref(false)
@@ -39,12 +39,12 @@ onMounted(async () => {
   <!-- <h1 class="my-4 text-center text-2xl">2022</h1> -->
   <button class="btn btn-secondary" @click="openModal = true">新增</button>
   <template v-for="course in courses" :key="course.id">
-    <CourseCard
+    <FlatCourseCard
       class="m-2"
       :title="course.title"
       :date="course.date"
       @edit="onEdit(course)"
-    ></CourseCard>
+    ></FlatCourseCard>
   </template>
 
   <!-- Modal -->
