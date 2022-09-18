@@ -15,6 +15,15 @@ const courseForm = reactive({
 const onEdit = (selCourse) => {
   // openModal.value = true
 }
+const onReset = (selCourse) => {
+  console.log('onReset', selCourse)
+  let courseId = selCourse.date.replaceAll('-', '')
+  set(fireRef(db, `courses/${courseId}`), {
+    date: selCourse.date,
+    title: selCourse.title,
+    owner: '',
+  })
+}
 const onCloseModal = () => {
   openModal.value = false
   console.log(courseForm)
@@ -43,7 +52,9 @@ onMounted(async () => {
       class="m-2"
       :title="course.title"
       :date="course.date"
+      :owner="course.owner"
       @edit="onEdit(course)"
+      @reset="onReset(course)"
     ></FlatCourseCard>
   </template>
 

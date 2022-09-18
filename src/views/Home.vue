@@ -9,40 +9,52 @@ const courses = ref([])
 const openModal = ref(false)
 const selectedCourse = ref({})
 const selectedCourseId = ref('')
+const currentUser = ref(null)
 
 const onRegister = (selCourse, selCourseId) => {
   // console.log('onRegister', selCourse, selCourseId)
-  openModal.value = true
-  selectedCourse.value = selCourse
-  selectedCourseId.value = selCourseId
+  if (currentUser.value) {
+    openModal.value = true
+    selectedCourse.value = selCourse
+    selectedCourseId.value = selCourseId
+  } else {
+    
+  }
 }
 const onCloseModal = () => {
   openModal.value = false
 }
 const onAccept = () => {
   let auth = getAuth()
-  if (auth.currentUser) {
-    // console.log('onAccept', auth.currentUser)
+  if (currentUser.value) {
+    // console.log('onAccept', currentUser.value)
     let update_data = {}
     update_data[`/courses/${selectedCourseId.value}`] = {
       ...selectedCourse.value,
       owner: {
-        uid: auth.currentUser.uid,
-        name: auth.currentUser.displayName,
-        email: auth.currentUser.email,
+        uid: currentUser.value.uid,
+        name: currentUser.value.displayName,
+        email: currentUser.value.email,
       },
     }
     // console.log('onAccept', update_data)
     update(fireRef(db), update_data)
     openModal.value = false
   } else {
+    openModal.value = true
   }
 }
 
 onMounted(async () => {
   const coursesRef = fireRef(db, 'courses/')
   onValue(coursesRef, (snapshot) => {
+    console.log(snapshot)
     courses.value = snapshot.val()
+    let auth = getAuth()
+    console.log(auth)
+    if (auth.currentUser) {
+      currentUser.value = auth.currentUser
+    }
   })
 })
 </script>

@@ -7,12 +7,18 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  cancelable,
+  cancelable: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emits = defineEmits({
   register(payload) {
     console.log('register', payload)
+  },
+  unregister(payload) {
+    console.log('unregister', payload)
   },
 })
 </script>
@@ -22,27 +28,10 @@ const emits = defineEmits({
     <div class="card-body items-center text-center">
       <h2 class="card-title">{{ title }}</h2>
       <p>{{ date }}</p>
-      <div class="flex">
-        <p v-if="owner != ''">{{ owner.name }}</p>
-        <button class="btn btn-circle btn-outline" @click="$emit('register')">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
+      <p>{{ owner.name }}</p>
       <div class="card-actions justify-center">
         <button
+          v-if="!cancelable"
           class="btn btn-primary"
           :class="{ 'btn-disabled': disable }"
           @click="$emit('register')"
@@ -62,6 +51,28 @@ const emits = defineEmits({
             />
           </svg>
           Accept
+        </button>
+
+        <button
+          v-else
+          class="btn btn-primary"
+          @click="$emit('unregister')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          Regret
         </button>
       </div>
     </div>
