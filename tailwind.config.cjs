@@ -2,8 +2,20 @@ module.exports = {
   content: ['./src/**/*.{vue,js,ts}'],
   daisyui: {
     themes: [
-      'light',
-      'dark',
+      {
+        light: {
+          ...require("daisyui/src/colors/themes")["[data-theme=light]"],
+          primary: "#E89819",
+          "primary-content": "#040505",
+        },
+      },
+      {
+        dark: {
+          ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
+          primary: "#FFA500",
+          "primary-content": "#131616",
+        }
+      },
       'cmyk',
       // {
       //   mytheme: {
