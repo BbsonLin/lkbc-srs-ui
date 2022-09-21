@@ -15,10 +15,10 @@ const props = defineProps({
 
 const emits = defineEmits({
   register(payload) {
-    console.log('register', payload)
+    // console.log('register', payload)
   },
   unregister(payload) {
-    console.log('unregister', payload)
+    // console.log('unregister', payload)
   },
 })
 </script>

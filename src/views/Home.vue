@@ -6,22 +6,23 @@ import {
   signInWithPopup,
   getAuth,
 } from 'firebase/auth'
+import { useAppStore } from "@/store"
 import { db } from '@/firebase'
 import CourseCard from '@/components/CourseCard.vue'
 
 const provider = new GoogleAuthProvider()
+const appStore = useAppStore()
 
 const courses = ref([])
 const openModal = ref(false)
 const openLoginModal = ref(false)
 const selectedCourse = ref({})
 const selectedCourseId = ref('')
-const currentUser = ref(null)
 
 
 const onRegister = (selCourse, selCourseId) => {
   // console.log('onRegister', selCourse, selCourseId)
-  if (currentUser.value) {
+  if (appStore.getCurrentUser != null) {
     openModal.value = true
     selectedCourse.value = selCourse
     selectedCourseId.value = selCourseId
@@ -33,16 +34,15 @@ const onCloseModal = () => {
   openModal.value = false
 }
 const onAccept = () => {
-  let auth = getAuth()
-  if (currentUser.value) {
-    // console.log('onAccept', currentUser.value)
+  if (appStore.getCurrentUser != null) {
+    // console.log('onAccept', appStore.getCurrentUser)
     let update_data = {}
     update_data[`/courses/${selectedCourseId.value}`] = {
       ...selectedCourse.value,
       owner: {
-        uid: currentUser.value.uid,
-        name: currentUser.value.displayName,
-        email: currentUser.value.email,
+        uid: appStore.getCurrentUser.uid,
+        name: appStore.getCurrentUser.displayName,
+        email: appStore.getCurrentUser.email,
       },
     }
     // console.log('onAccept', update_data)
@@ -57,11 +57,8 @@ const onLoginWithGoogle = () => {
   signInWithPopup(auth, provider)
     .then((result) => {
       // This gives you a Google Access Token. You can use it to access Google APIs.
-      console.log('onLoginWithGoogle', result)
-      if (auth.currentUser) {
-        currentUser.value = auth.currentUser
-      }
-      // The signed-in user info.
+      // console.log('onLoginWithGoogle', result)
+      appStore.updateCurrentUser(result.user)
       openLoginModal.value = false
     })
     .catch((error) => {
@@ -75,11 +72,11 @@ onMounted(async () => {
   onValue(coursesRef, (snapshot) => {
     console.log(snapshot)
     courses.value = snapshot.val()
-    let auth = getAuth()
-    console.log('onValue', auth)
-    if (auth.currentUser) {
-      currentUser.value = auth.currentUser
-    }
+    // let auth = getAuth()
+    // console.log('onValue', auth)
+    // if (auth.currentUser) {
+    //   currentUser.value = auth.currentUser
+    // }
   })
 })
 </script>
@@ -98,8 +95,7 @@ onMounted(async () => {
   <input type="checkbox" class="modal-toggle" v-model="openModal" />
   <div class="modal">
     <div class="modal-box relative flex flex-col">
-      <label class="btn btn-sm btn-circle absolute right-2 top-2"
-        @click="onCloseModal">✕</label>
+      <label class="btn btn-sm btn-circle absolute right-2 top-2" @click="onCloseModal">✕</label>
       <h3 class="font-bold text-lg">Accept this challenge?</h3>
       <div class="modal-action">
         <!-- <label class="btn" @click="onCloseModal">Nope</label> -->
@@ -133,4 +129,5 @@ onMounted(async () => {
 </template>
 
 <style>
+
 </style>

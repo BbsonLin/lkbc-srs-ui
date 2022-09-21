@@ -9,6 +9,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from 'firebase/auth'
+import { useAppStore } from "@/store"
 import { auth } from '@/firebase'
 
 const mode = useColorMode({
@@ -21,6 +22,7 @@ const mode = useColorMode({
 })
 const route = useRoute()
 const router = useRouter()
+const appStore = useAppStore()
 const provider = new GoogleAuthProvider()
 
 const theme = ref('dark')
@@ -43,31 +45,26 @@ const onLoginWithGoogle = () => {
   signInWithPopup(getAuth(), provider)
     .then((result) => {
       // This gives you a Google Access Token. You can use it to access Google APIs.
-      console.log(result)
-      const credential = GoogleAuthProvider.credentialFromResult(result)
-      const token = credential.accessToken
-
+      // console.log(result)
+      // const credential = GoogleAuthProvider.credentialFromResult(result)
+      // const token = credential.accessToken
       // The signed-in user info.
-      const user = result.user
-      console.log(token, user)
-      photoUrl.value = user.photoURL
+      // const user = result.user
+      appStore.updateCurrentUser(result.user)
       openLoginModal.value = false
     })
     .catch((error) => {
       console.log(error)
       // Handle Errors here.
-      // const errorCode = error.code;
-      // const errorMessage = error.message;
-      // The email of the user's account used.
-      // const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error)
+      // const errorCode = error.code
+      // const credential = GoogleAuthProvider.credentialFromError(error)
     })
 }
 const onLogout = () => {
   signOut(getAuth())
     .then(() => {
       console.log('onLogout success')
+      appStore.updateCurrentUser(null)
       router.go('/')
       location.reload()
     })
@@ -77,12 +74,6 @@ const onLogout = () => {
 }
 
 onMounted(() => {
-  onAuthStateChanged(getAuth(), (user) => {
-    // console.log(user)
-    if (user) {
-      photoUrl.value = user.photoURL
-    }
-  })
   const preferredColor = usePreferredColorScheme()
   mode.value = preferredColor.value
 })
@@ -152,7 +143,7 @@ onMounted(() => {
       <button
         class="btn btn-ghost"
         @click="openLoginModal = true"
-        v-if="photoUrl == ''"
+        v-if="appStore.getCurrentUser == null"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -174,7 +165,7 @@ onMounted(() => {
         <label tabindex="0" class="btn btn-md btn-circle btn-ghost m-1">
           <div class="avatar">
             <div class="w-8 rounded-full">
-              <img :src="photoUrl" />
+              <img :src="appStore.getCurrentUser.photoURL" />
             </div>
           </div>
         </label>
