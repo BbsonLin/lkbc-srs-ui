@@ -88,7 +88,7 @@ onMounted(async () => {
   <!-- <h1 class="my-4 text-center text-2xl">2022 學青選課囉~</h1> -->
   <div class="flex flex-wrap justify-center">
     <template v-for="(course, id) in courses" :key="course.id">
-      <CourseCard class="m-1" :title="course.title" :date="course.date" :owner="course.owner"
+      <CourseCard class="m-0.5" :title="course.title" :date="course.date" :owner="course.owner"
         :disable="course.owner != ''" @register="onRegister(course, id)"></CourseCard>
       <!-- <label for="my-modal" class="btn modal-button">open modal</label> -->
     </template>
