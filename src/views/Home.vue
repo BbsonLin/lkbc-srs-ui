@@ -18,7 +18,7 @@ const openModal = ref(false)
 const openLoginModal = ref(false)
 const selectedCourse = ref({})
 const selectedCourseId = ref('')
-
+const ownerName = ref('')
 
 const onRegister = (selCourse, selCourseId) => {
   // console.log('onRegister', selCourse, selCourseId)
@@ -41,7 +41,7 @@ const onAccept = () => {
       ...selectedCourse.value,
       owner: {
         uid: appStore.getCurrentUser.uid,
-        name: appStore.getCurrentUser.displayName,
+        name: ownerName.value == '' ? appStore.getCurrentUser.displayName: ownerName.value,
         email: appStore.getCurrentUser.email,
       },
     }
@@ -97,6 +97,14 @@ onMounted(async () => {
     <div class="modal-box relative flex flex-col">
       <label class="btn btn-sm btn-circle absolute right-2 top-2" @click="onCloseModal">✕</label>
       <h3 class="font-bold text-lg">Accept this challenge?</h3>
+      <div class="py-2">
+        <input
+          type="text"
+          placeholder="Sign your name here"
+          class="input input-bordered w-full max-w-xs"
+          v-model="ownerName"
+        />
+      </div>
       <div class="modal-action">
         <!-- <label class="btn" @click="onCloseModal">Nope</label> -->
         <label class="btn btn-primary" @click="onAccept">Yes !</label>

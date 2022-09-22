@@ -46,7 +46,7 @@ onMounted(async () => {
 
 <template>
   <!-- <h1 class="my-4 text-center text-2xl">2022</h1> -->
-  <button class="btn btn-secondary" @click="openModal = true">新增</button>
+  <div class="mx-2"><button class="btn btn-primary" @click="openModal = true">新增</button></div>
   <template v-for="course in courses" :key="course.id">
     <FlatCourseCard
       class="m-2"
