@@ -24,9 +24,9 @@ const emits = defineEmits({
 </script>
 
 <template>
-  <div class="card card-bordered border-1 bg-base-200 shadow-sm">
+  <div class="card card-bordered border-1 bg-base-200 shadow-sm w-[45%] md:w-[30%] lg:w-[23%]">
     <div class="card-body items-center text-center">
-      <h2 class="card-title">{{ title }}</h2>
+      <h2 class="card-title whitespace-pre-wrap">{{ title }}</h2>
       <p>{{ date }}</p>
       <p>{{ owner.name }}</p>
       <div class="card-actions justify-center">

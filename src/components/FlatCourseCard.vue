@@ -9,8 +9,8 @@ const emits = defineEmits(['edit', 'reset'])
 </script>
 
 <template>
-  <div class="card card-bordered card-compact bg-base-100 shadow-xl">
-    <div class="card-body flex-row justify-around">
+  <div class="card card-bordered card-compact bg-base-100 shadow-xl md:w-[80%]">
+    <div class="card-body flex-row justify-between">
       <div class="flex items-center">
         <h2 class="card-title mr-2">{{ title }}</h2>
         <p class="mr-2">{{ date }}</p>
