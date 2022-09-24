@@ -222,4 +222,15 @@ onMounted(() => {
   </div>
 </template>
 
-<style></style>
+<style>
+  @font-face {
+    font-family: 'ChenYuluoyan-Thin-Monospaced';
+    font-style: normal;
+    src: local('ChenYuluoyan-Thin-Monospaced'), url(@/assets/fonts/ChenYuluoyan-Thin-Monospaced.ttf) format('truetype');
+  }
+
+  html {
+    font-family: 'ChenYuluoyan-Thin-Monospaced';
+    font-size: 1.25em;
+  }
+</style>
